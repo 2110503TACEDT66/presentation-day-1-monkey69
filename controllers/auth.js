@@ -1,5 +1,25 @@
 const User = require('../models/User');
 
+const sendTokenResponse = (user,statusCode,res,msg) => {
+    const token = user.getSignedJwtToken();
+
+    const options = {
+        expires:new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+        httpOnly:true
+    } 
+    
+    if(process.env.NODE_ENV === 'production'){
+        options.secure = true;
+    }
+
+    res.status(statusCode).cookie('token',token,options).json({
+        success:true,
+        message:msg,
+        token
+    });
+
+};
+
 exports.register = async (req,res,next)=>{
     try{
         const {name,telephone,email,password,role} = req.body;
@@ -12,13 +32,7 @@ exports.register = async (req,res,next)=>{
             role:role
         });
 
-        const token = user.getSignedJwtToken();
-
-        res.status(200).json({
-            success:true,
-            message:'Register finish!',
-            token
-        });
+        sendTokenResponse(user,200,res,'Register complete');
     }
     catch(err){
         res.status(400).json({
@@ -54,10 +68,13 @@ exports.login = async (req,res,next)=>{
             message:'Invalid credential'
         });
 
-    const token = user.getSignedJwtToken();
+    sendTokenResponse(user,200,res,'Login complete');
+};
+
+exports.getMe = async (req,res,next)=>{
+    const user = await User.findById(req.user.id);
     res.status(200).json({
         success:true,
-        message:'Login finish',
-        token
+        data:user
     });
 };
