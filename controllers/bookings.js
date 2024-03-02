@@ -4,7 +4,7 @@ const Dentist = require("../models/Dentist");
 exports.getBooking = async (req, res, next) => {
   try {
     const booking = await Booking.findById(req.params.id).populate('dentists');
-
+    
     if (!booking) {
       return res.status(404).json({
         success: false,
@@ -25,7 +25,7 @@ exports.getBooking = async (req, res, next) => {
 };
 
 exports.getBookings = async (req, res, next) => {
-    let query;
+    let query = Booking.find();
 
     if(req.user.role !== 'admin'){
         query=Booking.find({user:req.user.id}).populate('dentists');
@@ -69,7 +69,8 @@ exports.addBooking = async (req, res, next) => {
 
     const existedBooking = await Booking.find({ user: req.user.id });
 
-    if (existedBooking.length >= 1 && req.user.role !== "admin") {
+    if (existedBooking.length >= 1 && req.user.role !== "admin") 
+    {
       return res.status(400).json({
         success: false,
         message: `The user with ID ${req.user.id} has already booked`,
@@ -102,7 +103,8 @@ exports.updateBooking = async (req, res, next) => {
       });
     }
 
-    if (booking.user.toString() !== req.user.id && req.user.role !== "admin") {
+    if (booking.user.toString() !== req.user.id && req.user.role !== "admin")
+    {
       return res.status(401).json({
         success: false,
         message: `User ${req.user.id} is not authorized to update this booking`,
@@ -136,7 +138,8 @@ exports.deleteBooking = async (req, res, next) => {
         });
     }
 
-    if (booking.user.toString() !== req.user.id && req.user.role !== "admin") {
+    if (booking.user.toString() !== req.user.id && req.user.role !== "admin")
+    {
       return res
         .status(401)
         .json({
