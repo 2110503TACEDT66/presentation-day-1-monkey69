@@ -8,7 +8,11 @@ connectDB();
 
 const app=express();
 
+const dentists = require('./routes/dentists');
+
 app.use(express.json());
+
+app.use('/api/v1/dentists', dentists);
 
 const PORT=process.env.PORT || 5000;
 
