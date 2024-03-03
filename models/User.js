@@ -41,6 +41,10 @@ const UserSchema = new mongoose.Schema({
         minlength:6,
         select:false
     },
+    customerId:{
+        type:String,
+        required:[true,'Please add a customerId']
+    },
     resetPasswordToken:String,
     resetPasswordExpire:Date,
     createdAt:{

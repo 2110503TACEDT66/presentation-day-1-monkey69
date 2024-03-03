@@ -1,7 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
-const auth = require('./routes/auth');
 const cookieParser = require('cookie-parser');
 
 dotenv.config({ path: "./config/config.env" });
@@ -11,6 +10,8 @@ connectDB();
 //Route file
 const booking = require("./routes/bookings");
 const dentists = require('./routes/dentists');
+const stripe = require('./routes/stripe');
+const auth = require('./routes/auth');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/v1/auth',auth);
+app.use('/api/v1/payment',stripe);
 app.use('/api/v1/dentists', dentists);
 app.use("/api/v1/bookings", booking);
 

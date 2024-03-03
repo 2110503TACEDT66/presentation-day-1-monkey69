@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const stripe = require('../controllers/stripe');
 
 const sendTokenResponse = (user,statusCode,res,msg) => {
     const token = user.getSignedJwtToken();
@@ -24,12 +25,15 @@ exports.register = async (req,res,next)=>{
     try{
         const {name,telephone,email,password,role} = req.body;
 
+        const customer = await stripe.createStripeCustomer(email,name);
+
         const user = await User.create({
             name:name,
             telephone:telephone,
             email:email,
             password:password,
-            role:role
+            role:role,
+            customerId:customer.id
         });
 
         sendTokenResponse(user,200,res,'Register complete');

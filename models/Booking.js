@@ -15,6 +15,15 @@ const BookingSchema = new mongoose.Schema({
         ref: 'Dentist',
         required:true
     },
+    priceId:{
+        type:String,
+        required:[true,'Please add priceId']
+    },
+    status:{
+        type:String,
+        enum:['finish','unfinish'],
+        default: 'unfinish'
+    },
     createAt: {
         type: Date,
         default: Date.now
