@@ -3,7 +3,7 @@ const Dentist = require("../models/Dentist");
 
 exports.getBooking = async (req, res, next) => {
   try {
-    const booking = await Booking.findById(req.params.id).populate('dentists');
+    const booking = await Booking.findById(req.params.id).populate('dentist');
     
     if (!booking) {
       return res.status(404).json({
@@ -28,14 +28,14 @@ exports.getBookings = async (req, res, next) => {
     let query = Booking.find();
 
     if(req.user.role !== 'admin'){
-        query=Booking.find({user:req.user.id}).populate('dentists');
+        query=Booking.find({user:req.user.id}).populate('dentist');
     }else { 
         if(req.params.dentistId) {
             console.log(req.params.dentistId);
 
-            query = Booking.find({hospital: req.params.dentistId}).populate('dentists');
+            query = Booking.find({hospital: req.params.dentistId}).populate('dentist');
         } else {
-            query = Booking.find().populate('dentists');
+            query = Booking.find().populate('dentist');
         }
     }
     try {
@@ -49,7 +49,7 @@ exports.getBookings = async (req, res, next) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({success:false,message:
-        "Cannot find any Booking"});
+        error.message});
     }
 };
 
