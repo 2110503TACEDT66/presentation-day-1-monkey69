@@ -55,7 +55,7 @@ exports.getBookings = async (req, res, next) => {
 
 exports.addBooking = async (req, res, next) => {
   try {
-    req.body.id = req.params.dentistId;
+    req.body.dentist = req.params.dentistId;
     const dentist = await Dentist.findById(req.params.dentistId);
 
     if (!dentist) {
@@ -87,7 +87,7 @@ exports.addBooking = async (req, res, next) => {
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: "Cannot create Booking",
+      message: error.message,
     });
   }
 };
